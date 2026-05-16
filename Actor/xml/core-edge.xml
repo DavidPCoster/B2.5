@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet type="text/xsl" href="./ets.xsl" charset="ISO-8859-1"?>
+
+<parameters>
+  <coupling>
+   <niter>   1  </niter>       <!-- number of edge iterations -->
+   <rxf_ce> 1.0 </rxf_ce>      <!-- fraction of new solution to use (core to edge) -->
+   <rxf_ec> 1.0 </rxf_ec>      <!-- fraction of new solution to use (edge to core) -->
+  </coupling>
+  <solps>
+    <directory> /pfs/scratch/g2dpc/GIT/SOLPS-ITER_GitHub/solps-iter/runs/AUG/32408_2.960/D/couple_test_09 </directory>  <!-- directory for SOLPS -->
+  </solps>
+</parameters>

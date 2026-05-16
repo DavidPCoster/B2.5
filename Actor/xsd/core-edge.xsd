@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!-- document element -->
+  <xs:element name="parameters">				
+    <xs:annotation>
+      <xs:documentation>
+        GLOBAL: parameters for core-edge coupling
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:all>
+         <xs:element ref="coupling" maxOccurs="1"/>
+         <xs:element ref="solps" maxOccurs="1"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="IntList">
+     <xs:list itemType="xs:integer"/>
+  </xs:simpleType>
+
+  <!-- coupling parameters -->
+  <xs:element name="coupling">					
+    <xs:annotation>
+      <xs:documentation>
+        BLOCK: specify the coupling
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:all>
+         <xs:element ref="niter" minOccurs="0" maxOccurs="1"/>
+         <xs:element ref="direction" minOccurs="0" maxOccurs="1"/>
+         <xs:element ref="rxf_ce" minOccurs="0" maxOccurs="1"/>
+         <xs:element ref="rxf_ec" minOccurs="0" maxOccurs="1"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="niter" type="xs:integer">
+    <xs:annotation>
+      <xs:documentation>
+        NITER, number of edge iterations.  Default 10.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="direction" type="IntList">		
+    <xs:annotation>
+      <xs:documentation>
+        0: not involved in the coupling; 1: flux from the core and the value from the edge; 2: value from the core and the flux from the edge. Default is 1.  Length and ordering derived from the edge code.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="rxf_ce" type="xs:float">			
+    <xs:annotation>
+      <xs:documentation>
+        relaxation parameter: fraction of the new solution to use (core to edge)
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="rxf_ec" type="xs:float">			
+    <xs:annotation>
+      <xs:documentation>
+        relaxation parameter: fraction of the new solution to use (edge to core)
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <!-- solps parameters -->
+  <xs:element name="solps">					
+    <xs:annotation>
+      <xs:documentation>
+        BLOCK: specify the solps parameters
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:all>
+         <xs:element ref="directory" minOccurs="0" maxOccurs="1"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="directory" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>
+        DIRECTORY, the path to the SOLPS directory; absolute path if starting with a /, otherwise relative to SOLPSTOP
+      </xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+</xs:schema>

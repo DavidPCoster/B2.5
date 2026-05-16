@@ -1,0 +1,80 @@
+# Saved with iWrap 1.0.0
+---
+actor_description:
+    actor_name: cec_solps
+    actor_type: MUSCLE3-Fortran
+    data_type: legacy
+code_description:
+    documentation: 'SOLPS-ITER core-edge actor
+
+        '
+    implementation:
+        code_parameters:
+            format: legacy-xml
+            parameters: ./xml/core-edge.xml
+            schema: ./xsd/core-edge.xsd
+        code_path: ../builds/standalone.ITM.gfortran/libb2.a
+        data_dictionary_compliant: 3.38.1
+        data_type: legacy
+        include_path: ../builds/standalone.ITM.gfortran/core_edge.mod
+        programming_language: fortran
+        root_dir: ..
+        subroutines:
+            finalize:
+                arguments:
+                name: b2mn_ets_finalize
+                need_code_parameters: false
+            get_state:
+            get_timestamp:
+            init:
+                arguments:
+                name:
+                need_code_parameters: true
+            main:
+                arguments:
+                -   intent: IN
+                    name: core_profiles_in
+                    type: core_profiles
+                -   intent: IN
+                    name: core_transport_in
+                    type: core_transport
+                -   intent: IN
+                    name: equilibrium_in
+                    type: equilibrium
+                -   intent: IN
+                    name: transport_solver_numerics_in
+                    type: transport_solver_numerics
+                -   intent: OUT
+                    name: transport_solver_numerics_out
+                    type: transport_solver_numerics
+                name: b2mn_ets
+                need_code_parameters: true
+            set_state:
+    settings:
+        compiler_cmd: gfortran
+        compiler_flags:
+        extra_libraries:
+            path_defined:
+            - /gw/swimas/software/GCCcore/13.2.0/lib64/libstdc++.so
+            - /gw/swimas/software/ParaView/5.12.0-foss-2023b/lib/libvtkPVPythonCatalyst-pv5.12.so.5.12
+            - /gw/swimas/software/ParaView/5.12.0-foss-2023b/lib/libvtkPVCatalyst-pv5.12.so.5.12
+            - /gw/swimas/software/ParaView/5.12.0-foss-2023b/lib/libvtkPythonInterpreter-pv5.12.so.5.12
+            - /gw/swimas/software/Python/3.11.5-GCCcore-13.2.0/lib/libpython3.11.so
+            - /gw/swimas/software/ParaView/5.12.0-foss-2023b/lib/libvtkCommonDataModel-pv5.12.so.5.12
+            - /gw/swimas/software/ParaView/5.12.0-foss-2023b/lib/libvtkCommonTransforms-pv5.12.so.5.12
+            - /gw/swimas/software/ParaView/5.12.0-foss-2023b/lib/libvtkCommonMath-pv5.12.so.5.12
+            - /gw/swimas/software/ParaView/5.12.0-foss-2023b/lib/libvtkkissfft-pv5.12.so.5.12
+            - /gw/swimas/software/ParaView/5.12.0-foss-2023b/lib/libvtkCommonCore-pv5.12.so.5.12
+            - /gw/swimas/software/ParaView/5.12.0-foss-2023b/lib/libvtktoken-pv5.12.so.5.12
+            - /gw/swimas/software/ParaView/5.12.0-foss-2023b/lib/libvtksys-pv5.12.so.5.12
+            pkg_config_defined:
+            - xmllib
+            - mscl
+            - ggd
+            - amns
+            - al-identifiers-fortran
+            - al-fortran
+            - openblas
+            - netcdf-fortran
+        mpi_compiler_cmd:
+...
