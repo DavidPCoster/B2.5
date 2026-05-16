@@ -182,8 +182,8 @@
       save use_astra
 *   ..procedures
       real (kind=R8) ::
-     *  smin, smax
-      external xertst, sfill, b2saxpy, smin, smax
+     *  b2smin, b2smax
+      external xertst, sfill, b2saxpy, b2smin, b2smax
       external b2xvsg, b2xvff, b2xvps, b2xpfe, b2xpfi, b2sqel, b2sqcx,
      &  b2stbc, b2stbm, b2stbr, b2stel, b2stcx, ipgeti
 *   ..initialisation
@@ -239,11 +239,11 @@
        call b2xvsg (n2, hy, 1, 'hy', '.gt.')
        call b2xvsg (n2, hy1, 1, 'hy1', '.gt.')
 *    ..test range of qz
-       call xertst (-1.0_R8.lt.smin(n2,qz(-1,-1,0),1).and.
-     &   smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
+       call xertst (-1.0_R8.lt.b2smin(n2,qz(-1,-1,0),1).and.
+     &   b2smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
      &   'faulty argument range qz(,,0)')
-       call xertst (0.0_R8.lt.smin(n2,qz(-1,-1,1),1).and.
-     &   smax(n2,qz(-1,-1,1),1).le.1.0_R8,
+       call xertst (0.0_R8.lt.b2smin(n2,qz(-1,-1,1),1).and.
+     &   b2smax(n2,qz(-1,-1,1),1).le.1.0_R8,
      &   'faulty argument range qz(,,1)')
 *    ..test state
        call b2xvps (nx, ny, ns,

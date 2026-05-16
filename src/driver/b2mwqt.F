@@ -130,8 +130,8 @@
 *   ..procedures
       intrinsic min, max
       real (kind=R8) ::
-     *   smin, b2ssum
-      external xertst, ipgeti, smin, b2ssum, cfwure
+     *   b2smin, b2ssum
+      external xertst, ipgeti, b2smin, b2ssum, cfwure
 *   ..initialisation
       data ncall/0/, style/1/
 
@@ -165,11 +165,11 @@
       call xertst (0.le.itim.and.0.le.itcnt,
      &  'faulty argument itim, itcnt')
 *   ..test residuals
-      call xertst (0.0_R8.le.smin(ns,aresco,1).and.
+      call xertst (0.0_R8.le.b2smin(ns,aresco,1).and.
      &  0.0_R8.le.areshe.and.0.0_R8.le.areshi.and.0.0_R8.le.arespo,
      &  'faulty argument aresco/ee/ei/po')
 *   ..test corrections
-      call xertst (0.0_R8.le.smin(ns,acorpa,1).and.
+      call xertst (0.0_R8.le.b2smin(ns,acorpa,1).and.
      &  0.0_R8.le.acorte.and.0.0_R8.le.acorti.and.0.0_R8.le.acorpo,
      &  'faulty argument acorpa/te/ti/po')
 *   ..set and test nfld

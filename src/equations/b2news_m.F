@@ -112,8 +112,8 @@
 *   ..procedures
       intrinsic mod
       real (kind=R8) ::
-     *  smin, smax, b2sasum
-      external xertst, ipgetr, smin, smax,
+     *  b2smin, b2smax, b2sasum
+      external xertst, ipgetr, b2smin, b2smax,
      &  b2scopy, b2saxpy, b2sasum, ipgeti
       external b2xvsg, b2xvps, b2xpne, b2xpni, b2xpfe, b2xpfi, b2xppb,
      &  b2xpnm, b2tral, b2treq, b2tfnb,
@@ -336,14 +336,14 @@ csw 26feb2014 some extra variables
        call b2xvsg (n2, vol, 1, 'vol', '.gt.')
        call b2xvsg (n2, hx, 1, 'hx', '.gt.')
        call b2xvsg (n2, hy, 1, 'hy', '.gt.')
-       call xertst (-1.0_R8.lt.smin(n2,qz(-1,-1,0),1).and.
-     &              smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
+       call xertst (-1.0_R8.lt.b2smin(n2,qz(-1,-1,0),1).and.
+     &              b2smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
      .              'faulty argument range qz(,,0)')
-       call xertst (0.0_R8.lt.smin(n2,qz(-1,-1,1),1).and.
-     &              smax(n2,qz(-1,-1,1),1).le.1.0_R8,
+       call xertst (0.0_R8.lt.b2smin(n2,qz(-1,-1,1),1).and.
+     &              b2smax(n2,qz(-1,-1,1),1).le.1.0_R8,
      .              'faulty argument range qz(,,1)')
-       call xertst (0.0_R8.lt.smin(n2,qc,1).and.
-     &              smax(n2,qc,1).le.1.0_R8,
+       call xertst (0.0_R8.lt.b2smin(n2,qc,1).and.
+     &              b2smax(n2,qc,1).le.1.0_R8,
      .              'faulty argument range qc')
 *    ..test present state
        call b2xvps (nx, ny, ns,

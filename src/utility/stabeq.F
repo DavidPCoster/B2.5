@@ -63,8 +63,8 @@
 *   ..procedures
       intrinsic max
       real (kind=R8) ::
-     *   smin
-      external xerrab, smin
+     *   b2smin
+      external xerrab, b2smin
 
 *-----------------------------------------------------------------------
 *.computation
@@ -78,7 +78,7 @@
        call xerrab ('stabeq--faulty argument sign rf')
       endif
 *   ..test aa5(,,0)
-      if (smin(m*n,aa5(0,0,0),1).lt.0) then
+      if (b2smin(m*n,aa5(0,0,0),1).lt.0) then
        call xerrab ('stabeq--faulty argument sign aa5(,,0)')
       endif
 *   ..adjust aa5(,,0)

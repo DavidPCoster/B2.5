@@ -102,8 +102,8 @@
       save ncall, pol_anom_scale, hcimx_flag, mode
 *   ..procedures
       real (kind=R8) ::
-     *  smin, smax
-      external xertst, sfill, smin, smax, b2scopy
+     *  b2smin, b2smax
+      external xertst, sfill, b2smin, b2smax, b2scopy
       external ipgetr, ipgeti
       external b2tqna, b2txcx, b2txcy, b2txcv, b2txsx, b2txsy
 *   ..initialisation
@@ -155,11 +155,11 @@
        call b2xvfx (nx, ny, pbs(-1,-1,0), 'pbsx')
        call b2xvfy (nx, ny, pbs(-1,-1,1), 'pbsy')
 *    ..test range of qz
-       call xertst (-1.0_R8.lt.smin(n2,qz(-1,-1,0),1).and.
-     &              smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
+       call xertst (-1.0_R8.lt.b2smin(n2,qz(-1,-1,0),1).and.
+     &              b2smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
      .              'faulty argument range qz(,,0)')
-       call xertst (0.0_R8.lt.smin(n2,qz(-1,-1,1),1).and.
-     &              smax(n2,qz(-1,-1,1),1).le.1.0_R8,
+       call xertst (0.0_R8.lt.b2smin(n2,qz(-1,-1,1),1).and.
+     &              b2smax(n2,qz(-1,-1,1),1).le.1.0_R8,
      .              'faulty argument range qz(,,1)')
 *    ..test sign of na, te, ti
        call b2xvsg (n2*ns, na, 1, 'na', '.gt.')

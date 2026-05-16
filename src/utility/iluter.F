@@ -116,8 +116,8 @@
 *   ..procedures
       intrinsic max, mod
       real (kind=R8) ::
-     *   smin, damax
-      external xerrab, smin, damax, sfill, b2scopy, b2saxpy, sip5g
+     *   b2smin, damax
+      external xerrab, b2smin, damax, sfill, b2scopy, b2saxpy, sip5g
       data alp/0.0_R8,0.625_R8,0.250_R8,
      1 0.875_R8,0.500_R8,0.125_R8,0.750_R8,
      1 0.375_R8,1.0_R8/
@@ -145,7 +145,7 @@
        call xerrab ('iluter--faulty argument aa5(,,-1), aa5(,,1)')
       endif
 *   ..test sign of main diagonal
-      if (smin(m*n,aa5(0,0,0),1).lt.0.0_R8) then
+      if (b2smin(m*n,aa5(0,0,0),1).lt.0.0_R8) then
        call xerrab ('iluter--faulty argument sign aa5(,,0)')
       endif
 

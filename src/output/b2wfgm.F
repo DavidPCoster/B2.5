@@ -73,9 +73,9 @@
      &  tmin, tmax, qmin, qmax
 *   ..procedures
       real (kind=R8) ::
-     *   smin, smax, b2ssum
+     *   b2smin, b2smax, b2ssum
       logical strmas
-      external xertst, smin, smax, b2ssum, strmas
+      external xertst, b2smin, b2smax, b2ssum, strmas
       external b2xvgm
       intrinsic max
 
@@ -101,29 +101,29 @@
       if (strmas(idout,'pgmm')) then
 *    ..write range of crx, cry, bb
        write (nprt,'(/2x,a6)') '+pgmm'
-       tmin = smin(n2*4,crx,1)
-       tmax = smax(n2*4,crx,1)
+       tmin = b2smin(n2*4,crx,1)
+       tmax = b2smax(n2*4,crx,1)
        write (nprt,'(/2x,a,1p,2e11.3)') 'Range of crx: ', tmin, tmax
-       tmin = smin(n2*4,cry,1)
-       tmax = smax(n2*4,cry,1)
+       tmin = b2smin(n2*4,cry,1)
+       tmax = b2smax(n2*4,cry,1)
        write (nprt,'(2x,a,1p,2e11.3)') 'Range of cry: ', tmin, tmax
-       tmin = smin(n2*4,fpsi,1)
-       tmax = smax(n2*4,fpsi,1)
+       tmin = b2smin(n2*4,fpsi,1)
+       tmax = b2smax(n2*4,fpsi,1)
        write (nprt,'(2x,a,1p,2e11.3)') 'Range of fpsi:', tmin, tmax
-       tmin = smin(n2*4,ffbz,1)
-       tmax = smax(n2*4,ffbz,1)
+       tmin = b2smin(n2*4,ffbz,1)
+       tmax = b2smax(n2*4,ffbz,1)
        write (nprt,'(2x,a,1p,2e11.3)') 'Range of ffbz:', tmin, tmax
-       tmin = smin(n2,bb(-1,-1,0),1)
-       tmax = smax(n2,bb(-1,-1,0),1)
+       tmin = b2smin(n2,bb(-1,-1,0),1)
+       tmax = b2smax(n2,bb(-1,-1,0),1)
        write (nprt,'(2x,a,1p,2e11.3)') 'Range of bx:  ', tmin, tmax
-       tmin = smin(n2,bb(-1,-1,1),1)
-       tmax = smax(n2,bb(-1,-1,1),1)
+       tmin = b2smin(n2,bb(-1,-1,1),1)
+       tmax = b2smax(n2,bb(-1,-1,1),1)
        write (nprt,'(2x,a,1p,2e11.3)') 'Range of by:  ', tmin, tmax
-       tmin = smin(n2,bb(-1,-1,2),1)
-       tmax = smax(n2,bb(-1,-1,2),1)
+       tmin = b2smin(n2,bb(-1,-1,2),1)
+       tmax = b2smax(n2,bb(-1,-1,2),1)
        write (nprt,'(2x,a,1p,2e11.3)') 'Range of bz:  ', tmin, tmax
-       tmin = smin(n2,bb(-1,-1,3),1)
-       tmax = smax(n2,bb(-1,-1,3),1)
+       tmin = b2smin(n2,bb(-1,-1,3),1)
+       tmax = b2smax(n2,bb(-1,-1,3),1)
        write (nprt,'(2x,a,1p,2e11.3)') 'Range of bb:  ', tmin, tmax
       endif
 *   ..write pgcc segment?
@@ -249,9 +249,9 @@ c---DPC problematic
 *     ..compute 'hy(ix)'
         rhy = b2ssum(ny+2,hy(ix,-1),nx+2)
 *     ..compute 'qmin(ix)'
-        qmin = smin(ny+2,qz(ix,-1,0),nx+2)
+        qmin = b2smin(ny+2,qz(ix,-1,0),nx+2)
 *     ..compute 'qmax(ix)'
-        qmax = smax(ny+2,qz(ix,-1,0),nx+2)
+        qmax = b2smax(ny+2,qz(ix,-1,0),nx+2)
 *     ..compute 'sx(ix)'
         if (leftix(ix,-1).eq.-2) then
          rsx = b2ssum(ny+2,gs(rightix(ix,-1),rightiy(ix,-1),0),nx+2)
@@ -286,9 +286,9 @@ c---DPC problematic
 *     ..compute 'hx(iy)'
         rhx = b2ssum(nx+2,hx(-1,iy),1)
 *     ..compute 'qmin(iy)'
-        qmin = smin(nx+2,qz(-1,iy,0),1)
+        qmin = b2smin(nx+2,qz(-1,iy,0),1)
 *     ..compute 'qmax(iy)'
-        qmax = smax(nx+2,qz(-1,iy,0),1)
+        qmax = b2smax(nx+2,qz(-1,iy,0),1)
 *     ..compute 'sy(iy)'
         if (bottomiy(-1,iy).eq.-2) then
          rsy = b2ssum(nx+2,gs(topix(-1,iy),topiy(-1,iy),1),1)

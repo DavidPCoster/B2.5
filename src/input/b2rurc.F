@@ -153,8 +153,8 @@
       parameter (lnzero=-1.0e30_R8)
 *   ..procedures
       real (kind=R8) ::
-     *   smax
-      external xertst, smax, cfrure, cfruin
+     *   b2smax
+      external xertst, b2smax, cfrure, cfruin
 
 *-----------------------------------------------------------------------
 *.computation
@@ -239,7 +239,7 @@
 *      (the meaning of lt0 is 'species k cannot ionise to k+1')
         if (lt0) then
 *       (ionisation rate must be 0)
-          t0 = smax((rtnt+1)*(rtnn+1),rtlsa(0,0,k),1)
+          t0 = b2smax((rtnt+1)*(rtnn+1),rtlsa(0,0,k),1)
           call xertst (t0.lt.cutll, 'faulty entry in rtlsa table')
         endif
       enddo
@@ -253,7 +253,7 @@
 *      (the meaning of lt0 is 'species k cannot recombine to k-1')
         if (lt0) then
 *       (recombination rate must be 0)
-          t0 = smax((rtnt+1)*(rtnn+1),rtlra(0,0,k),1)
+          t0 = b2smax((rtnt+1)*(rtnn+1),rtlra(0,0,k),1)
           call xertst (t0.lt.cutll, 'faulty entry in rtlra table')
         endif
       enddo
@@ -267,7 +267,7 @@
 *      (the meaning of lt0 is 'species k cannot recombine to k-1')
         if (lt0) then
 *       (charge exchange rate must be 0)
-          t0 = smax((rtnt+1)*(rtnn+1),rtlcx(0,0,k),1)
+          t0 = b2smax((rtnt+1)*(rtnn+1),rtlcx(0,0,k),1)
           call xertst (t0.lt.cutll, 'faulty entry in rtlcx table')
         endif
       enddo

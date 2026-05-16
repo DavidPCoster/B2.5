@@ -16,9 +16,10 @@
 *     -----------------------------------------------------------------
 !      integer, save :: ncall = 0, no_test_sign = 1                       !srv 26.10.08  11.01.13
       character vrnam0*8
+!!!      real (kind=R8) :: sminmax
       real (kind=R8) ::
-     *   smin, smax
-      external xertst, xerrab, smin, smax
+     *   b2smin, b2smax
+      external xertst, xerrab, b2smin, b2smax
 *     -----------------------------------------------------------------
 *$$$  call subini ('b2xvsg')
 *   ..set internal parameters on first call
@@ -30,17 +31,30 @@
      &  'b2xvsg--faulty argument n, inc')
       vrnam0 = vrname
 !	if(no_test_sign.eq.0) then                                         !srv 26.10.08
+!!!      if (vrnam0 .eq. 'zn') then
+!!!         write(*,*) 'DPC: debug -- b2xvsg ns = ', n
+!!!         write(*,*) 'DPC: debug -- b2xvsg zn = ', fun(0:n-1:inc)
+!!!         write(*,*) 'DPC: debug -- b2xvsg chsg = ', chsg
+!!!         sminmax = b2smin(n,fun,inc)
+!!!         write(*,*) 'DPC: debug -- b2xvsg b2smin(n,fun,inc) = ',
+!!!     &        sminmax
+!!!      endif
       if (chsg.eq.'.lt.') then
-        call xertst (smax(n,fun,inc).lt.0,
+        call xertst (b2smax(n,fun,inc).lt.0,
      &   'b2xvsg--faulty argument sign '//vrnam0)
       else if (chsg.eq.'.le.') then
-        call xertst (smax(n,fun,inc).le.0,
+        call xertst (b2smax(n,fun,inc).le.0,
      &   'b2xvsg--faulty argument sign '//vrnam0)
       else if (chsg.eq.'.gt.') then
-        call xertst (smin(n,fun,inc).gt.0,
+!!!        write(*,*) 'DPC: debug -- b2xvsg vrnam0 = ', vrnam0
+!!!        write(*,*) 'DPC: debug -- b2xvsg chsg = ', chsg
+!!!        sminmax = b2smin(n,fun,inc)
+!!!        write(*,*) 'DPC: debug -- b2xvsg (b2smin(n,fun,inc).gt.0) = ',
+!!!     &        (sminmax.gt.0)
+        call xertst (b2smin(n,fun,inc).gt.0,
      &   'b2xvsg--faulty argument sign '//vrnam0)
       else if (chsg.eq.'.ge.') then
-        call xertst (smin(n,fun,inc).ge.0,
+        call xertst (b2smin(n,fun,inc).ge.0,
      &   'b2xvsg--faulty argument sign '//vrnam0)
       else
         call xerrab ('b2xvsg--faulty argument chsg')

@@ -18,8 +18,8 @@
      *   t0, t1
       intrinsic max, sqrt
       real (kind=R8) ::
-     *   smin, smax
-      external xertst, smin, smax
+     *   b2smin, b2smax
+      external xertst, b2smin, b2smax
       external b2xvsg, b2xxgs
 *     ------------------------------------------------------------------
 *   ..subprogram start-up calls
@@ -35,11 +35,11 @@
       call b2xvsg (n2, vol, 1, 'vol', '.gt.')
       call b2xvsg (n2, hx, 1, 'hx', '.gt.')
 *   ..test range of qz
-      call xertst (-1.0_R8.lt.smin(n2,qz(-1,-1,0),1).and.
-     &  smax(n2,qz(-1,-1,0),1).lt.1.0_R8, 
+      call xertst (-1.0_R8.lt.b2smin(n2,qz(-1,-1,0),1).and.
+     &  b2smax(n2,qz(-1,-1,0),1).lt.1.0_R8, 
      &  'faulty argument range qz(,,0)')
-      call xertst (0.0_R8.lt.smin(n2,qz(-1,-1,1),1).and.
-     &  smax(n2,qz(-1,-1,1),1).le.1.0_R8, 
+      call xertst (0.0_R8.lt.b2smin(n2,qz(-1,-1,1),1).and.
+     &  b2smax(n2,qz(-1,-1,1),1).le.1.0_R8, 
      &  'faulty argument range qz(,,1)')
 
 *   ..compute conx

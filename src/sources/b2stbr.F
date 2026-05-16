@@ -182,8 +182,8 @@
 #endif
 *   ..procedures
       external xertst, xerrab, sfill, ipgetr, ipgeti
-      external b2xvsg, b2xvff, smax, smin, get_jsep
-      real (kind=R8) :: smax, smin
+      external b2xvsg, b2xvff, b2smax, b2smin, get_jsep
+      real (kind=R8) :: b2smax, b2smin
       intrinsic mod
 *   ..initialisation
       save ncall, sput_src, sput_frc, sput_phys,
@@ -424,11 +424,11 @@
        call b2xvsg (n2, hy, 1, 'hy', '.gt.')
        call b2xvsg (n2, hy1, 1, 'hy1', '.gt.')
 *    ..test range of qz
-       call xertst (-1.0_R8.lt.smin(n2,qz(-1,-1,0),1).and.
-     &   smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
+       call xertst (-1.0_R8.lt.b2smin(n2,qz(-1,-1,0),1).and.
+     &   b2smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
      &   'faulty argument range qz(,,0)')
-       call xertst ( 0.0_R8.lt.smin(n2,qz(-1,-1,1),1).and.
-     &   smax(n2,qz(-1,-1,1),1).le.1.0_R8,
+       call xertst ( 0.0_R8.lt.b2smin(n2,qz(-1,-1,1),1).and.
+     &   b2smax(n2,qz(-1,-1,1),1).le.1.0_R8,
      &   'faulty argument range qz(,,1)')
 *    ..test sign of pbs
 !       call b2xvsg (n2*2, pbs, 1, 'pbs', '.ge.')                    !srv 11.01.13

@@ -76,9 +76,9 @@
       logical, save :: internal_energy_sources
 *   ..procedures
       real (kind=R8) ::
-     * smin, smax
+     * b2smin, b2smax
       external xertst, sfill,
-     * smin, smax, b2xvsg, b2xvff, ipgeti, ipgetr
+     * b2smin, b2smax, b2xvsg, b2xvff, ipgeti, ipgetr
       intrinsic abs, mod, sqrt
 *   ..initialisation
       data ncall/0/, linearisation/1.0_R8/, impgyro_mod/0/, 
@@ -120,10 +120,10 @@
        call b2xvsg (n2, hx, 1, 'hx', '.gt.')
        call b2xvsg (n2, hy, 1, 'hy', '.gt.')
 *    ..test range of qz
-       call xertst (-1.lt.smin(n2,qz(-1,-1,0),1).and.
-     &   smax(n2,qz(-1,-1,0),1).lt.1, 'faulty argument range qz(,,0)')
-       call xertst (0.lt.smin(n2,qz(-1,-1,1),1).and.
-     &   smax(n2,qz(-1,-1,1),1).le.1, 'faulty argument range qz(,,1)')
+       call xertst (-1.lt.b2smin(n2,qz(-1,-1,0),1).and.
+     &   b2smax(n2,qz(-1,-1,0),1).lt.1, 'faulty argument range qz(,,0)')
+       call xertst (0.lt.b2smin(n2,qz(-1,-1,1),1).and.
+     &   b2smax(n2,qz(-1,-1,1),1).le.1, 'faulty argument range qz(,,1)')
 *    ..test sign of na, ni, ne, te, ti
        call b2xvsg (n2*ns, na, 1, 'na', '.gt.')
        call b2xvsg (n2*2, ni, 1, 'ni', '.gt.')

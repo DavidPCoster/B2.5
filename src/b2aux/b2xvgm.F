@@ -55,8 +55,8 @@
       integer n2, i
 *   ..procedures
       real (kind=R8) ::
-     *   smin, smax
-      external xertst, smin, smax
+     *   b2smin, b2smax
+      external xertst, b2smin, b2smax
       external b2xvsg, b2xvfx, b2xvfy
 
 *-----------------------------------------------------------------------
@@ -78,17 +78,17 @@
       call b2xvsg (n2, cell_width, 1, 'cell_width', '.gt.')
       call b2xvsg (n2, cell_height, 1, 'cell_height', '.gt.')
 *   ..test range of qz, qc
-      call xertst (smin(n2,qz(-1,-1,0),1).gt.-1.0_R8.and.
-     &  smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
+      call xertst (b2smin(n2,qz(-1,-1,0),1).gt.-1.0_R8.and.
+     &  b2smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
      &  'faulty argument range qz(,,0)')
-      call xertst (smin(n2,qz(-1,-1,1),1).gt.0.0_R8.and.
-     &  smax(n2,qz(-1,-1,1),1).le.1.0_R8,
+      call xertst (b2smin(n2,qz(-1,-1,1),1).gt.0.0_R8.and.
+     &  b2smax(n2,qz(-1,-1,1),1).le.1.0_R8,
      &  'faulty argument range qz(,,1)')
-      call xertst (smin(n2,qc,1).gt.0.0_R8.and.
-     &  smax(n2,qc,1).le.1.0_R8,
+      call xertst (b2smin(n2,qc,1).gt.0.0_R8.and.
+     &  b2smax(n2,qc,1).le.1.0_R8,
      &  'faulty argument range qc')
-      call xertst (smin(n2,qcb,1).gt.0.0_R8.and.
-     &  smax(n2,qcb,1).le.1.0_R8,
+      call xertst (b2smin(n2,qcb,1).gt.0.0_R8.and.
+     &  b2smax(n2,qcb,1).le.1.0_R8,
      &  'faulty argument range qcb')
 *   ..test edge values of gs
       call b2xvfx (nx, ny, gs(-1,-1,0), 'gsx')
@@ -183,8 +183,8 @@
       integer n2, i
 *   ..procedures
       real (kind=R8) ::
-     *   smin, smax
-      external xertst, smin, smax
+     *   b2smin, b2smax
+      external xertst, b2smin, b2smax
       external b2xvsg, b2xvfx, b2xvfy1
 
 *-----------------------------------------------------------------------
@@ -206,17 +206,17 @@
       call b2xvsg (n2, cell_width, 1, 'cell_width', '.gt.')
       call b2xvsg (n2, cell_height, 1, 'cell_height', '.gt.')
 *   ..test range of qz, qc
-      call xertst (smin(n2,qz(-1,-1,0),1).gt.-1.0_R8.and.
-     &  smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
+      call xertst (b2smin(n2,qz(-1,-1,0),1).gt.-1.0_R8.and.
+     &  b2smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
      &  'faulty argument range qz(,,0)')
-      call xertst (smin(n2,qz(-1,-1,1),1).gt.0.0_R8.and.
-     &  smax(n2,qz(-1,-1,1),1).le.1.0_R8,
+      call xertst (b2smin(n2,qz(-1,-1,1),1).gt.0.0_R8.and.
+     &  b2smax(n2,qz(-1,-1,1),1).le.1.0_R8,
      &  'faulty argument range qz(,,1)')
-      call xertst (smin(n2,qc,1).gt.0.0_R8.and.
-     &  smax(n2,qc,1).le.1.0_R8,
+      call xertst (b2smin(n2,qc,1).gt.0.0_R8.and.
+     &  b2smax(n2,qc,1).le.1.0_R8,
      &  'faulty argument range qc')
-      call xertst (smin(n2,qcb,1).gt.0.0_R8.and.
-     &  smax(n2,qcb,1).le.1.0_R8,
+      call xertst (b2smin(n2,qcb,1).gt.0.0_R8.and.
+     &  b2smax(n2,qcb,1).le.1.0_R8,
      &  'faulty argument range qcb')
 *   ..test edge values of gs
       call b2xvfx (nx, ny, gs(-1,-1,0), 'gsx')

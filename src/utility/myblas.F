@@ -265,23 +265,23 @@
 *     ------------------------------------------------------------------
       integer i, i2
       real (kind=R8) ::
-     *   t, smin
+     *   t, b2smin
       intrinsic min
-      external smin, xerrab
+      external b2smin, xerrab
 *     ------------------------------------------------------------------
       if (n1 .lt. 1 .or. n2 .lt. 1) then
          call xerrab ('b2s2min: invalid n1/n2 values')
 *        - - - - - - -
       else if (n1*inc1x .eq. inc2x) then
-         b2s2min = smin (n1*n2, sx, inc1x)
+         b2s2min = b2smin (n1*n2, sx, inc1x)
          return
 *        - - - - - - -
       else
          i2 = ibase1(n2, inc2x)
-         t = smin (n1, sx(i2), inc1x)
+         t = b2smin (n1, sx(i2), inc1x)
          i2 = i2 + inc2x
          do 1, i = 2, n2
-            t = min (t, smin (n1, sx(i2), inc1x))
+            t = min (t, b2smin (n1, sx(i2), inc1x))
             i2 = i2 + inc2x
     1    continue
          b2s2min = t

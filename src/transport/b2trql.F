@@ -51,8 +51,8 @@
      *   nirm(-1:nx,-1:ny)
 *   ..procedures
       real (kind=R8) ::
-     *   smin, smax
-      external xertst, smin, smax
+     *   b2smin, b2smax
+      external xertst, b2smin, b2smax
       external b2tlhe, b2tlhi, b2tlmv, b2xpnr, b2xvsg
 *   ..initialisation
       data ncall/0/
@@ -91,14 +91,14 @@
        call b2xvsg (n2, hx, 1, 'hx', '.gt.')
        call b2xvsg (n2, hy, 1, 'hy', '.gt.')
 *    ..test range of qz, qc
-       call xertst (-1.0_R8.lt.smin(n2,qz(-1,-1,0),1).and.
-     &   smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
+       call xertst (-1.0_R8.lt.b2smin(n2,qz(-1,-1,0),1).and.
+     &   b2smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
      &   'faulty argument range qz(,,0)')
-       call xertst (0.0_R8.lt.smin(n2,qz(-1,-1,1),1).and.
-     &   smax(n2,qz(-1,-1,1),1).le.1.0_R8,
+       call xertst (0.0_R8.lt.b2smin(n2,qz(-1,-1,1),1).and.
+     &   b2smax(n2,qz(-1,-1,1),1).le.1.0_R8,
      &   'faulty argument range qz(,,1)')
-       call xertst (0.0_R8.lt.smin(n2,qc,1).and.
-     &   smax(n2,qc,1).le.1.0_R8,
+       call xertst (0.0_R8.lt.b2smin(n2,qc,1).and.
+     &   b2smax(n2,qc,1).le.1.0_R8,
      &   'faulty argument range qc')
 *    ..test sign of na, te, ti, ne2
        call b2xvsg (n2*ns, na, 1, 'na', '.gt.')

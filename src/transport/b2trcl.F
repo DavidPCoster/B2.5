@@ -121,8 +121,8 @@ csw 13mar2012
       integer, save :: core_cond_limit=0
 *   ..procedures
       real (kind=R8) ::
-     *  smin, smax                                                       !srv 22.04.16
-      external xertst, xerrab, sfill, smin, smax
+     *  b2smin, b2smax                                                       !srv 22.04.16
+      external xertst, xerrab, sfill, b2smin, b2smax
       external b2tqca, b2tqce, b2tqin, b2txcx, b2txcy, b2tlmv,           !xpb
      &  ipgeti, ipgetr, b2ttia                                           !lk 19.09.07
 *   ..initialisation
@@ -193,11 +193,11 @@ csw 13mar2012
         call b2xvsg (n2, hy, 1, 'hy', '.gt.')
         call b2xvsg (n2, hy1, 1, 'hy1', '.gt.')
 *    ..test range of qz
-        call xertst (-1.0_R8.lt.smin(n2,qz(-1,-1,0),1).and.
-     &               smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
+        call xertst (-1.0_R8.lt.b2smin(n2,qz(-1,-1,0),1).and.
+     &               b2smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
      &               'faulty argument range qz(,,0)')
-        call xertst (0.0_R8.lt.smin(n2,qz(-1,-1,1),1).and.
-     &               smax(n2,qz(-1,-1,1),1).le.1.0_R8,
+        call xertst (0.0_R8.lt.b2smin(n2,qz(-1,-1,1),1).and.
+     &               b2smax(n2,qz(-1,-1,1),1).le.1.0_R8,
      &               'faulty argument range qz(,,1)')
 *    ..test sign of na, te, ti
         call b2xvsg (n2*ns, na, 1, 'na', '.gt.')

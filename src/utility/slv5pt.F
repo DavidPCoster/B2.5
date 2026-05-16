@@ -98,8 +98,8 @@
       parameter (rxf=1.0_R8)
 *   ..procedures
       real (kind=R8) ::
-     *   smin, damax
-      external xertst, smin, damax, sfill, sgbtrf, sgbtrs
+     *   b2smin, damax
+      external xertst, b2smin, damax, sfill, sgbtrf, sgbtrs
 
 *-----------------------------------------------------------------------
 *.computation
@@ -122,7 +122,7 @@
        call xerrab ('slv5pt--faulty argument aa5(,,-1), aa5(,,1)')
       endif
 *   ..test sign of main diagonal
-      if (smin(m*n,aa5(0,0,0),1).lt.0.0_R8) then
+      if (b2smin(m*n,aa5(0,0,0),1).lt.0.0_R8) then
        call xerrab ('slv5pt--faulty argument sign aa5(,,0)')
       endif
 

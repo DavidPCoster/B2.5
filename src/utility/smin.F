@@ -1,15 +1,15 @@
-      function smin (n, sx, incx)
+      function b2smin (n, sx, incx)
       use b2mod_types
       use b2mod_math
       implicit none
       real (kind=R8) ::
-     *   smin
+     *   b2smin
       integer n, incx
       real (kind=R8) ::
      *   sx(0:*)
 *     ------------------------------------------------------------------
 *     SMIN (BLAS-like routine) computes the minimum value in a vector.
-*     smin(n,sx,incx) returns the minimum value in the s.p. real*8 vector
+*     b2smin(n,sx,incx) returns the minimum value in the s.p. real*8 vector
 *     described by (n,sx,incx). BLAS storage conventions.
 *     n must be positive.
 *     ------------------------------------------------------------------
@@ -19,8 +19,9 @@
       intrinsic min
       external xerrab
 *     ------------------------------------------------------------------
+!!!      write(*,*) 'DPC: debug -- b2smin n = ', n
       if (n.lt.1.or.incx.eq.0) then
-       call xerrab ('smin--error, n.lt.1.or.incx.eq.0')
+       call xerrab ('b2smin--error, n.lt.1.or.incx.eq.0')
       else if (incx.eq.1) then
        t = sx(0)
 #if ( !defined(NAGFOR) && !defined(LEGACYCOMP) )
@@ -32,7 +33,7 @@
 #if ( !defined(NAGFOR) && !defined(LEGACYCOMP) )
 !$OMP END SIMD
 #endif
-       smin = t
+       b2smin = t
       else
        ix = ibase(n,incx)
        t = sx(ix)
@@ -41,8 +42,8 @@
         t = min(t,sx(ix))
         ix = ix+incx
        enddo
-       smin = t
+       b2smin = t
       endif
       return
 *     ------------------------------------------------------------------
-      end function smin
+      end function b2smin

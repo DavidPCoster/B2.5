@@ -116,8 +116,8 @@
      &  fne_53(-1:nx,-1:ny,0:1)
 *   ..procedures
       real (kind=R8) ::
-     *  smin, smax, b2sasum, damax
-      external xertst, ipgeti, ipgetr, smin, smax, b2sasum, damax
+     *  b2smin, b2smax, b2sasum, damax
+      external xertst, ipgeti, ipgetr, b2smin, b2smax, b2sasum, damax
       external b2xvsg, b2xvps, b2xpne, b2xpni,
      &  b2spel, b2spcx, b2sral, b2srdt, b2srst, b2news, b2mxzr,
      &  b2mxar, b2mxac, b2mwqt, b2mwit, b2tral, b2srsm
@@ -233,11 +233,11 @@
       call b2xvsg (n2, hx, 1, 'hx', '.gt.')
       call b2xvsg (n2, hy, 1, 'hy', '.gt.')
 *   ..test range of qz
-      call xertst (-1.0_R8.lt.smin(n2,qz(-1,-1,0),1).and.
-     &             smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
+      call xertst (-1.0_R8.lt.b2smin(n2,qz(-1,-1,0),1).and.
+     &             b2smax(n2,qz(-1,-1,0),1).lt.1.0_R8,
      &             'faulty argument range qz(,,0)')
-      call xertst (0.0_R8.lt.smin(n2,qz(-1,-1,1),1).and.
-     &             smax(n2,qz(-1,-1,1),1).le.1.0_R8,
+      call xertst (0.0_R8.lt.b2smin(n2,qz(-1,-1,1),1).and.
+     &             b2smax(n2,qz(-1,-1,1),1).le.1.0_R8,
      &             'faulty argument range qz(,,1)')
 *   ..test old state
       call b2xvsg (n2*ns, na0, 1, 'na0', '.gt.')

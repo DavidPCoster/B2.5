@@ -75,9 +75,9 @@
      &  fmtp='(2x,a6,4x,a)')
 *   ..procedures
       real (kind=R8) ::
-     *   scal10, smin, smax, damax
+     *   scal10, b2smin, b2smax, damax
       logical strmas
-      external xertst, scal10, smax, damax, strmas
+      external xertst, scal10, b2smax, damax, strmas
       external b2wgx0, b2wgx1, b2wgx2, b2wgx3
 
 *-----------------------------------------------------------------------
@@ -105,8 +105,8 @@
       endif
 *   ..contour plots of fpsi
 *     (plots use only one of the four sets of vertex data)
-      t0 = smin(n2*4,fpsi,1)
-      t1 = smax(n2*4,fpsi,1)
+      t0 = b2smin(n2*4,fpsi,1)
+      t1 = b2smax(n2*4,fpsi,1)
       write (header,fmth) 'FLUX FUNCTION FPSI (Wb).', (t1-t0)/20.
       if (strmas(idout,'mpff')) then
        write (nprt,fmtp) '+mpff', header
@@ -121,8 +121,8 @@
       endif
 *   ..contour plots of ffbz
 *     (plots use only one of the four sets of vertex data)
-      t0 = smin(n2*4,ffbz,1)
-      t1 = smax(n2*4,ffbz,1)
+      t0 = b2smin(n2*4,ffbz,1)
+      t1 = b2smax(n2*4,ffbz,1)
       write (header,fmth) 'FLUX FUNCTION FFBZ (Wb/m).', (t1-t0)/20.
       if (strmas(idout,'mpff')) then
        write (nprt,fmtp) '+mpff', header
@@ -181,7 +181,7 @@
      &   wrkx, wrky)
       endif
 *   ..contour plots of abs(bb)
-      t0 = scal10(0.8_R8*smax(n2,bb(-1,-1,3),1))
+      t0 = scal10(0.8_R8*b2smax(n2,bb(-1,-1,3),1))
       write (header,fmth) 'MAGNETIC FIELD BTOT (T).', t0/100.
       if (strmas(idout,'mpbb')) then
        write (nprt,fmtp) '+mpbb', header
