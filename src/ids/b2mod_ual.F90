@@ -227,15 +227,18 @@ contains
         !! Create and modify new shot/run
         if ( idx.eq.0 ) then
 #if AL_MAJOR_VERSION > 4
-          uri = 'imas:mdsplus?path='//trim(ids_path)
+          uri = 'imas:hdf5?path='//trim(ids_path)
 #if ( IMAS_MAJOR_VERSION == 4 && IMAS_MINOR_VERSION == 0 )
           allocate( description%uri(1) )
           description%uri = trim(uri)
 #endif
           call imas_open( uri, FORCE_CREATE_PULSE, idx, status, message )
+          write(*,*) 'DPC: debug -- put_ids_edge uri = ', trim(uri)
 #else
           call imas_create_env( treename, shot, run, 0, 0, idx, username, &
              & database, version, status )
+          write(*,*) 'DPC: debug -- put_ids_edge treename, shot, run, username, database, version',  &
+               trim(treename), shot, run, trim(username), trim(database), version
 #endif
           if (status.ne.0) then
             write(0,*) 'Opening IMAS database failed !'
@@ -530,7 +533,7 @@ contains
         !! Create and modify new shot/run
         if ( idx.eq.0 ) then
 #if AL_MAJOR_VERSION > 4
-          uri = 'imas:mdsplus?path='//trim(ids_path)
+          uri = 'imas:hdf5?path='//trim(ids_path)
 #if ( IMAS_MAJOR_VERSION == 4 && IMAS_MINOR_VERSION == 0 )
           if (do_summary) then
             allocate( description%uri(1) )
@@ -1068,7 +1071,7 @@ contains
 
         !! Open input datafile from local database
 #if AL_MAJOR_VERSION > 4
-        uri = 'imas:mdsplus?path='//trim(ids_path)
+        uri = 'imas:hdf5?path='//trim(ids_path)
         write(0,*) "Started reading input IMAS data entry", trim(uri)
         call imas_open( uri, OPEN_PULSE, idx, status, message )
         call xertst ( status.eq.0, trim(message) )

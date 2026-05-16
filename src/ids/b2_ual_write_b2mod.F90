@@ -580,7 +580,7 @@ program b2_ual_write_b2mod
     !! Process B2.5 data and set it to IMAS IDS
     write(*,*) "START B25_process_ids"
 #if AL_MAJOR_VERSION > 4
-    uri = 'imas:mdsplus?path='//trim(ids_path)
+    uri = 'imas:hdf5?path='//trim(ids_path)
     write(0,'(2a)') "Checking if IMAS data entry already exists : ",trim(ids_path)
     call imas_open( uri, OPEN_PULSE, idx, status, message )
 #else
@@ -595,7 +595,7 @@ program b2_ual_write_b2mod
 #if AL_MAJOR_VERSION > 4
         l=index(ids_path,'imasdb/ITER')
         write(olddir,'(a)') ids_path(1:l-1)//'imasdb/iter'//ids_path(l+11:256)
-        uri = 'imas:mdsplus?path='//trim(olddir)
+        uri = 'imas:hdf5?path='//trim(olddir)
         call imas_open( uri, OPEN_PULSE, idx, status, message )
 #else
         call imas_create_env( treename, shot, run, 0, 0, idx, username, &
@@ -610,7 +610,7 @@ program b2_ual_write_b2mod
 #if AL_MAJOR_VERSION > 4
         l=index(ids_path,'imasdb/ITER')
         write(olddir,'(a)') ids_path(1:l-1)//'imasdb/iter'//ids_path(l+11:256)
-        uri = 'imas:mdsplus?path='//trim(olddir)
+        uri = 'imas:hdf5?path='//trim(olddir)
         call imas_open( uri, OPEN_PULSE, idx, status, message )
 #else
         call imas_create_env( treename, shot, run, 0, 0, idx, username, &
@@ -794,7 +794,7 @@ program b2_ual_write_b2mod
               write(ids_path(l+7:l+10),'(a4)') 'ITER'
             end if
 #if AL_MAJOR_VERSION > 4
-            uri = 'imas:mdsplus?path='//trim(ids_path)
+            uri = 'imas:hdf5?path='//trim(ids_path)
             call imas_open( uri, OPEN_PULSE, idx, status, message )
 #else
             call imas_open_env(treename, shot, run, idx, &
