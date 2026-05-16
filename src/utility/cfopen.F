@@ -1,3 +1,4 @@
+
       subroutine cfopen (ioun, chname, chstat, chform)
       use b2mod_types
       implicit none
@@ -37,7 +38,12 @@
       if (streql(chstat,'old')) then
        fstat = 'old'
       else if (streql(chstat,'new')) then
-       fstat = 'new'
+         if (.true.) then
+            write(*,*) 'CFOPEN: Switching "new" to "restart"'
+            fstat = 'replace'
+         else
+            fstat = 'new'
+         endif
       else if (streql(chstat,'replace')) then              !srv 19.04.09 {
        fstat = 'replace'                                   !srv 19.04.09 }
       else
@@ -59,6 +65,7 @@
 *   ..test file existence
       if (streql(fstat,'old')) then
        call find_file(fname,ltst)
+       write(*,*) 'DPC: debug -- fname = ', trim(fname)
        call xertst (ltst, 'cfopen--supposed old file does not '//
      &   'exist: file='//trim(fname))
       elseif (streql(fstat,'replace')) then                  !srv 19.04.09
