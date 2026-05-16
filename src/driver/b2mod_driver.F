@@ -2620,6 +2620,10 @@ csw 09oct2012 set default potential already at this point (BCs)
      *    cvsa_uAdp_albe, cvsa_uBdp_al,
      5    fllim0fhi, fllimvisc, csig_cl, calf_cl,
      &    csig_stoch, chce_stoch)
+        write(*,*) 'min/max val fna = ',
+     &       minval(fne(:,:,0)), maxval(fne(:,:,0))
+        write(*,*) 'min/max val te = ',
+     &       minval(te(:,:))/ev, maxval(te(:,:))/ev
         call b2xpen (nx, ny, ns,
      1    fna, fna, fne, fch, fhe, fhi, kinrgy, ua, cvsa, rpt,
      2    te, ti, po, BoRiS, fhm, fhp, fhj, fht)
@@ -2905,10 +2909,12 @@ c new CDF movie option
           if (idx.eq.0.and.continued) then
 #if AL_MAJOR_VERSION > 4
             uri =
-     .       'imas:mdsplus?path='//trim(ids_path)
+     .       'imas:hdf5?path='//trim(ids_path)
             write(*,'(2a)')
      .        "Checking if IMAS data entry already exists : ",
      .         trim(ids_path)
+            write(*,*) 'DPC: debug -- b2mod_driver uri = ',
+     &           trim(uri)
             call imas_open( uri, OPEN_PULSE, idx, status, message )
 #else
             write(*,'(2a,2i8)')
@@ -2916,6 +2922,10 @@ c new CDF movie option
      .        trim(database), shot, run
             call imas_open_env(treename, shot, run, idx,
      .       username, database, version, status)
+            write(*,*) 'DPC: debug -- b2mod_driver_ids_edge ' //
+     &           'treename, shot, run, username, database, version',
+     &           trim(treename), shot, run, trim(username),
+     &           trim(database), version
 #endif
             if (status.ne.0) then
               if (database.eq.'ITER'.or.
@@ -2926,11 +2936,17 @@ c new CDF movie option
                 l=index(ids_path,'imasdb/ITER')
                 write(olddir,'(a)')
      .           ids_path(1:l-1)//'imasdb/iter'//ids_path(l+11:256)
-                uri = 'imas:mdsplus?path='//trim(olddir)
+                uri = 'imas:hdf5?path='//trim(olddir)
                 call imas_open( uri, OPEN_PULSE, idx, status, message )
+                write(*,*) 'DPC: debug -- b2mod_driver uri = ',
+     &               trim(uri)
 #else
                 call imas_open_env(treename, shot, run, idx,
      .           username, 'iter', version, status)
+                write(*,*) 'DPC: debug -- b2mod_driver_ids_edge ' //
+     &           'treename, shot, run, username, database, version',
+     &               trim(treename), shot, run, trim(username),
+     &               trim(database), version
 #endif
                 if (status.eq.0) then
                   database = 'iter'
@@ -2943,7 +2959,7 @@ c new CDF movie option
                 l=index(ids_path,'imasdb/iter')
                 write(olddir,'(a)')
      .           ids_path(1:l-1)//'imasdb/ITER'//ids_path(l+11:256)
-                uri = 'imas:mdsplus?path='//trim(olddir)
+                uri = 'imas:hdf5?path='//trim(olddir)
                 call imas_open( uri, OPEN_PULSE, idx, status, message )
 #else
                 call imas_open_env(treename, shot, run, idx,
@@ -3170,12 +3186,18 @@ cxpb Copy the IDS to a temporary location with the new DD and then bring it back
                       write(ids_path(l+7:l+10),'(a4)') 'ITER'
                     end if
 #if AL_MAJOR_VERSION > 4
-                    uri = 'imas:mdsplus?path='//trim(ids_path)
+                    uri = 'imas:hdf5?path='//trim(ids_path)
                     call imas_open( uri, OPEN_PULSE,
      .               idx, status, message )
+                    write(*,*) 'DPC: debug -- b2mod_driver uri = ',
+     &                   trim(uri)
 #else
                     call imas_open_env(treename, shot, run, idx,
      .               username, database, version, status)
+                    write(*,*) 'DPC: debug -- b2mod_driver_ids_edge ' //
+     &           'treename, shot, run, username, database, version',
+     &               trim(treename), shot, run, trim(username),
+     &               trim(database), version
 #endif
                   end if
                   if (continued) then
@@ -3701,17 +3723,23 @@ cxpb Copy the IDS to a temporary location with the new DD and then bring it back
      &      time_slice_index, num_time_slices )
         else if (continued) then
 #if AL_MAJOR_VERSION > 4
-          uri = 'imas:mdsplus?path='//trim(ids_path)
+          uri = 'imas:hdf5?path='//trim(ids_path)
           write(*,'(2a)')
      .     "Checking if IMAS data entry already exists : ",
      .      trim(ids_path)
           call imas_open( uri, OPEN_PULSE, idx, status, message )
+          write(*,*) 'DPC: debug -- b2mod_driver uri = ',
+     &         trim(uri)
 #else
           write(*,'(2a,2i8)')
      .     "Checking if IMAS data entry already exists : ",
      .      trim(database), shot, run
           call imas_open_env(treename, shot, run, idx,
      .      username, database, version, status)
+          write(*,*) 'DPC: debug -- b2mod_driver_ids_edge ' //
+     &         'treename, shot, run, username, database, version',
+     &         trim(treename), shot, run, trim(username),
+     &         trim(database), version
 #endif
           if (status.ne.0) then
             if (database.eq.'ITER'.or.
@@ -3723,11 +3751,17 @@ cxpb Copy the IDS to a temporary location with the new DD and then bring it back
               write(olddir,'(a)')
      .         ids_path(1:l-1)//'imasdb/iter'//ids_path(l+11:256)
               ids_path = trim(olddir)
-              uri = 'imas:mdsplus?path='//trim(ids_path)
+              uri = 'imas:hdf5?path='//trim(ids_path)
               call imas_open( uri, OPEN_PULSE, idx, status, message )
+              write(*,*) 'DPC: debug -- b2mod_driver uri = ',
+     &             trim(uri)
 #else
               call imas_open_env(treename, shot, run, idx,
      .         username, 'iter', version, status)
+              write(*,*) 'DPC: debug -- b2mod_driver_ids_edge ' //
+     &             'treename, shot, run, username, database, version',
+     &             trim(treename), shot, run, trim(username),
+     &             trim('iter'), version
 #endif
               if (status.eq.0) then
                 database = 'iter'
@@ -3741,11 +3775,17 @@ cxpb Copy the IDS to a temporary location with the new DD and then bring it back
               write(olddir,'(a)')
      .         ids_path(1:l-1)//'imasdb/iter'//ids_path(l+11:256)
               ids_path = trim(olddir)
-              uri = 'imas:mdsplus?path='//trim(ids_path)
+              uri = 'imas:hdf5?path='//trim(ids_path)
               call imas_open( uri, OPEN_PULSE, idx, status, message )
+              write(*,*) 'DPC: debug -- b2mod_driver uri = ',
+     &             trim(uri)
 #else
               call imas_open_env(treename, shot, run, idx,
      .         username, 'ITER', version, status)
+              write(*,*) 'DPC: debug -- b2mod_driver_ids_edge ' //
+     &             'treename, shot, run, username, database, version',
+     &             trim(treename), shot, run, trim(username),
+     &             trim('ITER'), version
 #endif
               database = 'ITER'
             end if
@@ -3919,12 +3959,18 @@ cxpb Copy the IDS to a temporary location with the new DD and then bring it back
                     write(ids_path(l+7:l+10),'(a4)') 'ITER'
                   end if
 #if AL_MAJOR_VERSION > 4
-                  uri = 'imas:mdsplus?path='//trim(ids_path)
+                  uri = 'imas:hdf5?path='//trim(ids_path)
                   call imas_open( uri, OPEN_PULSE,
      .             idx, status, message )
+                  write(*,*) 'DPC: debug -- b2mod_driver uri = ',
+     &                 trim(uri)
 #else
                   call imas_open_env(treename, shot, run, idx,
      .             username, database, version, status)
+                  write(*,*) 'DPC: debug -- b2mod_driver_ids_edge ' //
+     &            'treename, shot, run, username, database, version',
+     &                 trim(treename), shot, run, trim(username),
+     &                 trim(database), version
 #endif
                 end if
                 if (continued) then
