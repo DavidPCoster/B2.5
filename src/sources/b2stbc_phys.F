@@ -2001,11 +2001,24 @@ c dpc
      .          vol(bc_list_x(ix,ib),bc_list_y(ix,ib))
             ENDDO
             NAS=NAS/VS
-            DFS=CONPAR(IS,IB,1)+CONPAR(IS,IB,3)
+            DFS=CONPAR(IS,IB,1)+CONPAR(IS,IB,3)  ! conpar(,,3) represents an additional core flux (oftem from neutrals being recycled at the core boundary
+            if (CONPAR(IS,IB,4) .ne. 0.0_R8) then ! we have an integral contribution to the feedback
+               CONPAR(IS,IB,5) = CONPAR(IS,IB,5) + DFS - FS
+               DFS = DFS + CONPAR(IS,IB,5) * CONPAR(IS,IB,4)
+            end if
+            if (CONPAR(IS,IB,6) .ne. 0.0_R8) then
+               call xertst(CONPAR(IS,IB,6).gt.0.0_R8 .and.
+     1              CONPAR(IS,IB,6).le.1.0_R8,
+     2              'CONPAR(,,6) must be >0, <=1')
+               CONPAR(IS,IB,5) = CONPAR(IS,IB,5) *
+     1              (1.0_R8 - CONPAR(IS,IB,6))           ! decay the integral
+            endif
             FFAC=(1.0_R8+CONPAR(IS,IB,2)*
      1       (DFS-FS)/
      2       (abs(DFS)+abs(FS)+
-     3        abs(bc_type13_norm)+abs(NAS*bc_type13_fac)))
+     3           abs(bc_type13_norm)+abs(NAS*bc_type13_fac)))
+            write(*,'(a,i3,1p,3(1x,e15.6))')
+     1       'is,ffac,integral_deviation ', is, FFAC, CONPAR(IS,IB,5)
             NAS=NAS*FFAC
             write(*,'(a,i3,1p,3(1x,e15.6))')
      1       'b2stbc_conpar=13: is,curr_flux,desired_flux,density ',
