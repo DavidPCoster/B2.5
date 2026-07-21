@@ -78,6 +78,9 @@ contains
 
     real (kind=B2R8) :: navol_ave, centroid_r, centroid_z, tmp_vol_1, tmp_vol_2
     integer :: iy_core, centroid_n
+    character (383) :: command
+    integer :: EXITSTAT, CMDSTAT
+    character (128) :: CMDMSG
 
     integer iloop, nrho, ix, iy, is0, is1, is2, inuc
     INTEGER :: return_status
@@ -117,8 +120,15 @@ contains
              new_path = trim(new_path) // '/' // trim(solps_directory)
           endif
        endif
-       call chdir(trim(new_path))
-       write(*,*) 'Set CWD to be ', trim(new_path)      
+       command = '../../../../bin/setup_SOLPS-ITER ' // new_path
+       write(*,*) 'Executing the command ', trim(command)
+       CMDMSG = ''
+       CALL EXECUTE_COMMAND_LINE(command, .true., EXITSTAT, CMDSTAT, CMDMSG)
+       write(*,*) 'EXITSTAT = ', EXITSTAT
+       write(*,*) 'CMDSTAT = ', CMDSTAT
+       write(*,*) 'CMDMSG = ', trim(CMDMSG)
+!       call chdir(trim(new_path))
+!       write(*,*) 'Set CWD to be ', trim(new_path)      
        call status_logger('Started the SOLPS initialization')
        open(99, file='Core-Edge.coupling')
        write(99,'(a)') 'Core-Edge data transfers'
@@ -171,64 +181,60 @@ contains
           write(*,*) 'CORE_PROFILES'
           do is1=1, SIZE(core_profiles_in%profiles_1d(1)%ion)
              associate (ion => core_profiles_in%profiles_1d(1)%ion(is1))
-               if(ion%multiple_states_flag .ne. 0) then
-                  write(*,*) 'Error: still need to code impurities'
-                  stop
-               endif
-               if(size(ion%element) .ne. 1) then
-                  write(*,*) 'error: have only coded the case with 1 element in ion'
-                  stop
-               endif
-               do is0=0,ns-1
-                  if(abs(zn(is0)-ion%element(1)%z_n).lt.1e-1_B2R8.and.  &
-                       abs(am(is0)-ion%element(1)%a).lt.1e-1_B2R8.and.  &
-                       abs(zamin(is0)-ion%z_ion).lt.1e-1_B2R8.and.  &
-                       abs(zamax(is0)-ion%z_ion).lt.1e-1_B2R8) then
-                     if(b2etsmap(is0,1).lt.0) then
-                        b2etsmap(is0,0)=1
-                        b2etsmap(is0,1)=is1
-                        b2etsmap(is0,2)=0
-                     else
-                        write(*,*) 'Overlap found ', is1, b2etsmap(is0,1)
-                     endif
+               if(ion%multiple_states_flag .le. 0) then
+                  if(size(ion%element) .ne. 1) then
+                     write(*,*) 'error: have only coded the case with 1 element in ion'
+                     stop
                   endif
-               enddo
-               write(*,'(i3,4(1x,f8.3))') is1, ion%element(1)%z_n, &
-                    ion%z_ion, &
-                    ion%z_ion, &
-                    ion%element(1)%a
+                  do is0=0,ns-1
+                     if(abs(zn(is0)-ion%element(1)%z_n).lt.1e-1_B2R8.and.  &
+                          abs(am(is0)-ion%element(1)%a).lt.1e-1_B2R8.and.  &
+                          abs(zamin(is0)-ion%z_ion).lt.1e-1_B2R8.and.  &
+                          abs(zamax(is0)-ion%z_ion).lt.1e-1_B2R8) then
+                        if(b2etsmap(is0,1).lt.0) then
+                           b2etsmap(is0,0)=1
+                           b2etsmap(is0,1)=is1
+                           b2etsmap(is0,2)=0
+                        else
+                           write(*,*) 'Overlap found ', is1, b2etsmap(is0,1)
+                        endif
+                     endif
+                  enddo
+                  write(*,'(i3,4(1x,f8.3))') is1, ion%element(1)%z_n, &
+                       ion%z_ion, &
+                       ion%z_ion, &
+                       ion%element(1)%a
+               else
+                  if(size(ion%element) .ne. 1) then
+                     write(*,*) 'error: have only coded the case with 1 element in ion'
+                     stop
+                  endif
+                  do is2 = 1, size(ion%state)
+                     associate (state => core_profiles_in%profiles_1d(1)%ion(is1)%state(is2))
+                       do is0=0,ns-1
+                          if(abs(zn(is0)-ion%element(1)%z_n).lt.1e-1_B2R8.and.  &
+                               abs(am(is0)-ion%element(1)%a).lt.1e-1_B2R8.and.  &
+                               abs(zamin(is0)-state%z_min).lt.1e-1_B2R8.and.  &
+                               abs(zamax(is0)-state%z_max).lt.1e-1_B2R8) then
+                             if(b2etsmap(is0,1).lt.0) then
+                                b2etsmap(is0,0)=2
+                                b2etsmap(is0,1)=is1
+                                b2etsmap(is0,2)=is2
+                             else
+                                write(*,*) 'Overlap found ', is1, b2etsmap(is0,1)
+                             endif
+                          endif
+                       enddo
+                       write(*,'(i3,4(1x,f8.3))') is1, ion%element(1)%z_n, &
+                            state%z_min, &
+                            state%z_max, &
+                            ion%element(1)%a
+                     end associate
+                  end do
+               endif
              end associate
           enddo
        endif
-       ! if(associated(coreimpur_in)) then
-       !    write(*,*) 'COREIMPUR'
-       !    do is1=1, SIZE(coreimpur_in(1)%compositions%impurities)
-       !       inuc = coreimpur_in(1)%compositions%impurities(is1)%nucindex
-       !       do is2=1, coreimpur_in(1)%compositions%impurities(is1)%nzimp
-       !          do is0=0,ns-1
-       !             if(abs(zn(is0)-coreimpur_in(1)%compositions%nuclei(inuc)%zn).lt.1e-1_B2R8.and.  &
-       !                  abs(am(is0)-coreimpur_in(1)%compositions%nuclei(inuc)%amn).lt.1e-1_B2R8.and.  &
-       !                  abs(zamin(is0)-coreimpur_in(1)%compositions%impurities(is1)%zmin(is2)).lt.1e-1_B2R8.and.  &
-       !                  abs(zamax(is0)-coreimpur_in(1)%compositions%impurities(is1)%zmax(is2)).lt.1e-1_B2R8) then
-       !                if(b2etsmap(is0,1).lt.0) then
-       !                   b2etsmap(is0,0)=2
-       !                   b2etsmap(is0,1)=is1
-       !                   b2etsmap(is0,2)=is2
-       !                else
-       !                   write(*,*) 'Overlap found ', is1, '/', is2, b2etsmap(is0,1), '/', b2etsmap(is0,2)
-       !                endif
-       !             endif
-       !          enddo
-       !          write(*,'(i3,4(1x,f8.3),1x,i3)') is1, coreimpur_in(1)%compositions%nuclei(inuc)%zn, &
-       !               coreimpur_in(1)%compositions%impurities(is1)%zmin(is2), &
-       !               coreimpur_in(1)%compositions%impurities(is1)%zmax(is2),  &
-       !               coreimpur_in(1)%compositions%nuclei(inuc)%amn, is2
-       !       enddo
-       !    enddo
-       ! endif
-       ! if(associated(coreneutrals_in)) then
-       !    write(*,*) 'CORENEUTRALS (not coded yet)'
-       ! endif
 ! find the mappings to equations in transport_solver_numerics
        call xertst(associated(transport_solver_numerics_in%solver_1d), &
             'transport_solver_numerics_in%profiles_1d) must be associated')
@@ -247,12 +253,19 @@ contains
                   if(eq%primary_quantity%ion_index .eq. 0) then   ! electrons
                      b2etsmap(-1,3) = ieq
                   else if(eq%primary_quantity%ion_index .gt. 0) then  ! ions
-                     if (eq%primary_quantity%state_index .gt. 0) then ! charge state within the ion
-                        write(*,*) 'Impurities not yet coded -- skipped'
-                     else
+                     if (eq%primary_quantity%state_index .le. 0) then ! charge state within the ion
                         is1 = find_ets_ion_in_b2etsmap(eq%primary_quantity%ion_index, &
                              b2etsmap, ns)
                         if (b2etsmap(is1,1) .eq. eq%primary_quantity%ion_index) then
+                           b2etsmap(is1,3) = ieq
+                        else
+                           write(*,*) 'Not equal', b2etsmap(is1,1), eq%primary_quantity%ion_index
+                        endif
+                     else
+                        is1 = find_ets_ion_and_state_in_b2etsmap(eq%primary_quantity%ion_index, &
+                             eq%primary_quantity%state_index, b2etsmap, ns)
+                        if ((b2etsmap(is1,1) .eq. eq%primary_quantity%ion_index) .and. &
+                             (b2etsmap(is1,2) .eq. eq%primary_quantity%state_index)) then
                            b2etsmap(is1,3) = ieq
                         else
                            write(*,*) 'Not equal', b2etsmap(is1,1), eq%primary_quantity%ion_index
@@ -263,12 +276,19 @@ contains
                   if(eq%primary_quantity%ion_index .eq. 0) then   ! electrons
                      b2etsmap(-1,4) = ieq
                   else if(eq%primary_quantity%ion_index .gt. 0) then  ! ions
-                     if (eq%primary_quantity%state_index .gt. 0) then ! charge state within the ion
-                        write(*,*) 'Impurities not yet coded -- skipped'
-                     else
+                     if (eq%primary_quantity%state_index .le. 0) then ! charge state within the ion
                         is1 = find_ets_ion_in_b2etsmap(eq%primary_quantity%ion_index, &
                              b2etsmap, ns)
                         if (b2etsmap(is1,1) .eq. eq%primary_quantity%ion_index) then
+                           b2etsmap(is1,4) = ieq
+                        else
+                           write(*,*) 'Not equal', b2etsmap(is1,1), eq%primary_quantity%ion_index
+                        endif
+                     else
+                        is1 = find_ets_ion_and_state_in_b2etsmap(eq%primary_quantity%ion_index, &
+                             eq%primary_quantity%state_index, b2etsmap, ns)
+                        if ((b2etsmap(is1,1) .eq. eq%primary_quantity%ion_index) .and. &
+                             (b2etsmap(is1,2) .eq. eq%primary_quantity%state_index)) then
                            b2etsmap(is1,4) = ieq
                         else
                            write(*,*) 'Not equal', b2etsmap(is1,1), eq%primary_quantity%ion_index
@@ -308,8 +328,8 @@ contains
 
        call status_logger('Ended the SOLPS initialization')
     else
-       call chdir(trim(new_path))
-       write(*,*) 'Set CWD to be ', trim(new_path)
+!       call chdir(trim(new_path))
+!       write(*,*) 'Set CWD to be ', trim(new_path)
     endif first_loop
     
     ! map the information from core_transport_in onto the B2 data structures (CORE -> EDGE)
@@ -382,15 +402,27 @@ contains
                write(*,'(a,i3,1x,1p,g15.5)') 'Core->Edge: FLUX_NI', is0, bc_ce_na(is0)
                write(99,'(a,i3,1x,1p,g15.5)') 'Core->Edge: FLUX_NI', is0, bc_ce_na(is0)
             end if
-         else if(b2etsmap(is0,0) .eq. 2) then
-! ToDo ignore for the moment
-            stop 'Case for impurities not coded yet'
-          ! bccon(is0,1)=13
-          ! bc_ce_na(is0) = (1.0_b2r8 - rxf) * bc_ce_na(is0) + &
-          !      & rxf * coreimpur_in(1)%impurity(b2etsmap(is0,1))%flux%flux_dv(nrho,b2etsmap(is0,2))
-          ! conpar(is0,1,1)=bc_ce_na(is0)
-          ! write(*,'(a,i3,1x,1p,g15.5)') 'Core->Edge: FLUX_NI', is0, bc_ce_na(is0)
-          ! write(99,'(a,i3,1x,1p,g15.5)') 'Core->Edge: FLUX_NI', is0, bc_ce_na(is0)
+         else if(b2etsmap(is0,0) .eq. 2) then ! impurity
+            is1 = b2etsmap(is0,1)
+            is2 = b2etsmap(is0,2)
+            ieq = b2etsmap(is0,3)
+            if (ieq .gt. 0) then
+               write(*,*) trim(transport_solver_numerics_in%solver_1d(1)%equation(ieq)%primary_quantity%identifier%name(1))
+               call xertst(transport_solver_numerics_in%solver_1d(1)%equation(ieq)%boundary_condition(2)%position .eq. bc_rho,  &
+                    'Case of differing b.c. position not handled')
+               bc_ce_na(is0) = (1.0_b2r8 - rxf) * bc_ce_na(is0) + &
+                    rxf * model%ion(is1)%state(is2)%particles%flux(irho_bc) * surface_area
+               if (.false.) then
+                  bccon(is0,1)=13
+                  conpar(is0,1,1) = bc_ce_na(is0)
+                  call xertst(conpar(is0,1,2) .gt. 0.0_R8, 'conpar(,,2) must be > 0')
+               else
+                  bccon(is0,1)=8
+                  conpar(is0,1,1) = bc_ce_na(is0)
+               endif
+               write(*,'(a,i3,1x,1p,g15.5)') 'Core->Edge: FLUX_NI', is0, bc_ce_na(is0)
+               write(99,'(a,i3,1x,1p,g15.5)') 'Core->Edge: FLUX_NI', is0, bc_ce_na(is0)
+            end if
          elseif(b2etsmap(is0,0).eq.3) then
             stop 'Case for neutrals not coded yet'
          else
@@ -523,9 +555,10 @@ contains
       if (eq%computation_mode%index .ne. 2) then   ! predictive
          write(*,*) 'computation mode not predictive'
       else
-!ToDo         eq%boundary_condition(2)%type%name = 'value'
-!ToDo         eq%boundary_condition(2)%type%index = 1
-!ToDo         eq%boundary_condition(2)%type%description = 'Boundary condition is the value of the equations primary quantity'
+         allocate(eq%boundary_condition(2)%type%name(1), eq%boundary_condition(2)%type%description(1))
+         eq%boundary_condition(2)%type%name = 'value'
+         eq%boundary_condition(2)%type%index = 1
+         eq%boundary_condition(2)%type%description = 'Boundary condition is the value of the equations primary quantity'
          write(*,*) 'Old BC', eq%boundary_condition(2)%value(1)
          eq%boundary_condition(2)%value(1) = bc_ec_te
          write(*,*) 'New BC', eq%boundary_condition(2)%value(1)
@@ -576,7 +609,6 @@ contains
           bc_ec_na(is0) = (1.0_b2r8 - rxf) * bc_ec_na(is0) + rxf * naave
           ! ion density
           if (b2etsmap(is0,3) .gt. 0) then
-             is1 = b2etsmap(is0,1)
              ieq = b2etsmap(is0,3)
              associate (eq => transport_solver_numerics_out%solver_1d(1)%equation(ieq))
                write(*,*) trim(eq%primary_quantity%identifier%name(1)), eq%primary_quantity%ion_index
@@ -585,11 +617,12 @@ contains
                if (eq%computation_mode%index .ne. 2) then   ! predictive
                   write(*,*) 'computation mode not predictive'
                else
-!ToDo                  eq%boundary_condition(2)%type%name = 'value'
-!ToDo                  eq%boundary_condition(2)%type%index = 1
-!ToDo                  eq%boundary_condition(2)%type%description = 'Boundary condition is the value of the equations primary quantity'
-                  write(*,'(a,i3,1x,1p,g15.5)') 'Core<-Edge: IS, NI ', is1, bc_ec_na(is0)
-                  write(99,'(a,i3,1x,1p,g15.5)') 'Core<-Edge: IS, NI ', is1, bc_ec_na(is0)
+                  allocate(eq%boundary_condition(2)%type%name(1), eq%boundary_condition(2)%type%description(1))
+                  eq%boundary_condition(2)%type%name = 'value'
+                  eq%boundary_condition(2)%type%index = 1
+                  eq%boundary_condition(2)%type%description = 'Boundary condition is the value of the equations primary quantity'
+                  write(*,'(a,i3,1x,1p,g15.5)') 'Core<-Edge: IS, NI ', is0, bc_ec_na(is0)
+                  write(99,'(a,i3,1x,1p,g15.5)') 'Core<-Edge: IS, NI ', is0, bc_ec_na(is0)
                   write(*,*) 'Old BC', eq%boundary_condition(2)%value(1)
                   eq%boundary_condition(2)%value(1) = bc_ec_na(is0)
                   write(*,*) 'New BC', eq%boundary_condition(2)%value(1)
@@ -609,9 +642,10 @@ contains
                if (eq%computation_mode%index .ne. 2) then   ! predictive
                   write(*,*) 'computation mode not predictive'
                else
-!ToDo                  eq%boundary_condition(2)%type%name = 'value'
-!ToDo                  eq%boundary_condition(2)%type%index = 1
-!ToDo                  eq%boundary_condition(2)%type%description = 'Boundary condition is the value of the equations primary quantity'
+                  allocate(eq%boundary_condition(2)%type%name(1), eq%boundary_condition(2)%type%description(1))
+                  eq%boundary_condition(2)%type%name = 'value'
+                  eq%boundary_condition(2)%type%index = 1
+                  eq%boundary_condition(2)%type%description = 'Boundary condition is the value of the equations primary quantity'
                   write(*,*) 'Old BC', eq%boundary_condition(2)%value(1)
                   eq%boundary_condition(2)%value(1) = bc_ec_ti
                   write(*,*) 'New BC', eq%boundary_condition(2)%value(1)
@@ -636,8 +670,8 @@ contains
     firstpass=.false.
 
     call status_logger('Returning to the core code')
-    call chdir(trim(old_path))
-    write(*,*) 'Reset CWD to be ', trim(old_path)
+!    call chdir(trim(old_path))
+!    write(*,*) 'Reset CWD to be ', trim(old_path)
     call prgend()
 
     return
@@ -658,6 +692,21 @@ contains
       enddo
       return
     end function find_ets_ion_in_b2etsmap
+
+    integer function find_ets_ion_and_state_in_b2etsmap(i0, i1, b2etsmap, ns)
+      implicit none
+      integer b2etsmap(-1:ns-1, 0:4)
+      integer i0, i1, ns, is
+
+      find_ets_ion_and_state_in_b2etsmap = -1
+      do is = 0, ns-1
+         if ((b2etsmap(is, 1) .eq. i0) .and. (b2etsmap(is, 2) .eq. i1)) then
+            find_ets_ion_and_state_in_b2etsmap = is
+            return
+         end if
+      enddo
+      return
+    end function find_ets_ion_and_state_in_b2etsmap
 
     subroutine interpolate_edge(nrho, irho_bc, iy_core, q_ave_iy, map_vol, &
          profile, sqrt_norm_vol)
@@ -782,8 +831,8 @@ contains
     nullify(diagnosticInfo)
 
     write(*,*) 'b2mn_ets_finalize'
-    call chdir(trim(new_path))
-    write(*,*) 'Set CWD to be ', trim(new_path)
+!    call chdir(trim(new_path))
+!    write(*,*) 'Set CWD to be ', trim(new_path)
     call status_logger('Started the SOLPS finalization')
     call b2mn_fin
     deallocate(te_ave_iy, ti_ave_iy, ne_ave_iy, na_ave_iy, vol_ave_iy, map_vol)
@@ -791,8 +840,8 @@ contains
     deallocate(b2etsmap)
     deallocate(bc_ce_na, bc_ec_na, bc_ce_ti)
     call status_logger('Completed the SOLPS finalization, returning to the core code')
-    call chdir(trim(old_path))
-    write(*,*) 'Reset CWD to be ', trim(old_path)
+!    call chdir(trim(old_path))
+!    write(*,*) 'Reset CWD to be ', trim(old_path)
   end subroutine b2mn_ets_finalize
 
   subroutine status_logger(message)
