@@ -53,7 +53,7 @@ cank }
 #else
       integer NSDMAX
       parameter (NSDMAX=DEF_NSD)
-      real (kind=R8), save :: CONPAR(0:nsdmax-1,NBCD,3)
+      real (kind=R8), save :: CONPAR(0:nsdmax-1,NBCD,6)
       real (kind=R8), save :: MOMPAR(0:nsdmax-1,NBCD,2)
       real (kind=R8), save :: ENEPAR(NBCD,2)
       real (kind=R8), save :: ENIPAR(NBCD,2)
@@ -311,7 +311,7 @@ cxpb overwrite the defaults with the namelist data
       external ipgeti, xertst
 
 #ifdef ALLOCATE_AND_NAMELIST
-      allocate(CONPAR(0:nsd-1,nbcd_in,3))
+      allocate(CONPAR(0:nsd-1,nbcd_in,6))
       allocate(MOMPAR(0:nsd-1,nbcd_in,2))
       allocate(ENEPAR(nbcd_in,2))
       allocate(ENIPAR(nbcd_in,2))
